@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load multiply %}
+{% load gettotal %}
+{% block content %}
+
+<div class="small-container cart-page">
+    {% if messages %}
+        <div class="message-container">
+        {% for i in messages %}
+        <p class="{{ i.tags}}">{{ i }}</p>
+        {% endfor %}
+        </div>
+    {% endif %}
+        {% if cart and cart.added_items.all %}
+    <table>
+        <tbody><tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        {% for i in cart.added_items.all %}
+        <tr>
+            <td>
+                <div class="cart-info">
+                    <img src="{{ i.product.image.url }}">
+                    <div>
+                        <p>{{ i.product.title }}</p>
+                        <small>Price: ${{ i.product.price }}</small>
+                        <br>
+                        <a href="{% url 'remove' i.id %}">Remove</a>
+                    </div>
+                </div>
+            </td>
+            <td>{{ i.quantity }}</td>
+            <td>{% multiply i.product.price i.quantity %}</td>
+        </tr>
+        {% endfor%}
+    </tbody></table>
+    <div class="total-price">
+        <table>
+            <tbody>
+            <tr>
+                <td>Total</td>
+                <td>${% gettotal cart %}</td>
+            </tr>
+            <tr>
+                <td>
+                <form method="post" enctype="multipart/form-data" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="total" value="{% gettotal cart %}">
+                    <button class="btn" type="submit">Confirm Order</button>
+                </form>
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+    
+    
+</div>
+    {% else %}
+<p></p>
+    {% endif %}
+{% endblock %}

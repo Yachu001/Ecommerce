@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load get_status %}
+{% block content %}
+
+<div class="small-container cart-page">
+    {% if orders %}
+    <table>
+        <tbody><tr>
+            <th>Order Id </th>
+            <th>Order Date</th>
+            <th>Total Price</th>
+            <th>Order Status</th>
+        </tr>
+        {% for i in orders %}
+        <tr>
+            <td>{{ i.id }}</td>
+            <td>{{ i.created_at }}</td>
+            <td>{{ i.total_price }}</td>
+            <td>{% get_status i.order_status %}</td>
+        </tr>
+        {% endfor %}
+    </tbody></table>
+   
+        {% else %}
+        <p>No Orders</p>
+        {% endif %}
+</div>
+{% endblock %}
